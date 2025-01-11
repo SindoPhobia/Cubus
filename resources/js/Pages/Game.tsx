@@ -138,11 +138,7 @@ function Lobby({
             <section className="pt-8 px-8 flex gap-8 grow items-start">
                 <LobbiesControls games={availableSessions} />
                 <div className="flex gap-4 flex-col">
-                    <PlayerDetails
-                        username={user.name ?? ''}
-                        icon="/portraits/white-wizard.jpg"
-                        points={3}
-                    />
+                    <PlayerDetails />
                     <CurrentSessionDetails />
                 </div>
             </section>
@@ -295,13 +291,7 @@ function LobbiesControls({games: _games}: LobbiesControlsProps) {
     );
 }
 
-type PlayerDetailsProps = {
-    username: string;
-    icon: string;
-    points: number;
-};
-
-function PlayerDetails({}: PlayerDetailsProps) {
+function PlayerDetails() {
     const {user} = useAppState();
     const {showPopup} = usePopup();
 
@@ -312,7 +302,7 @@ function PlayerDetails({}: PlayerDetailsProps) {
             <section className="flex flex-col gap-[9px] items-end">
                 <TextTile>{user.name}</TextTile>
                 <TextTile>
-                    10 <SVG icon={Icon.points} fill="fill-custom-gray-400" />
+                    {user.points} <SVG icon={Icon.points} fill="fill-custom-gray-400" />
                 </TextTile>
                 <Button
                     icon={Icon.editProfile}
