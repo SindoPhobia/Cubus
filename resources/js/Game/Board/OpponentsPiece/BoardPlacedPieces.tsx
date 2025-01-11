@@ -41,6 +41,7 @@ export const BoardPlacedPieces = () => {
                             ]}
                             geometry={PIECE_GEOMETRY['block']}>
                             <PieceMaterialComponent
+                                playerColor={position.data}
                                 enableGlow={false}
                                 color={COLORS[position.data]}
                             />

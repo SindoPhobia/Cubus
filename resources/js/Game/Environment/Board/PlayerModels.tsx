@@ -13,7 +13,7 @@ import {useLoadedModels} from '@/Store/models_state';
 export const PlayerModels = () => {
     const models = useLoadedModels(s => s.models);
     const positions = usePlayerPositions();
-    const modelHeight = 2.3;
+    const modelHeight = 1.6;
     const isPlayerAlive = useBoardState(state => state.isPlayerAlive);
     const isGameOnGoing = useBoardState(state => state.isGameOnGoing);
 

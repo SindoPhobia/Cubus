@@ -84,6 +84,7 @@ export const OpponentPiece = memo((move: Props) => {
                             ]}
                             geometry={PIECE_GEOMETRY['block']}>
                             <PieceMaterialComponent
+                                playerColor={player_color}
                                 enableGlow={false}
                                 color={COLORS[player_color]}
                             />
