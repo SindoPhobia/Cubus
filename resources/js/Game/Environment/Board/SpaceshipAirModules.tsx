@@ -62,13 +62,13 @@ export const SpaceshipAirModules = () => {
             <AirModule
                 colorStart={colorStart}
                 depth={depth}
-                position={[7.8, height, -7.85]}
+                position={[7.8, height, -7.65]}
                 speed={speed}
             />
             <AirModule
                 colorStart={colorStart}
                 depth={depth}
-                position={[-7.8, height, -7.85]}
+                position={[-7.8, height, -7.65]}
                 speed={speed}
             />
         </>
