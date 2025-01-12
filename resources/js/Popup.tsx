@@ -482,8 +482,20 @@ function PopupSettings() {
     const hidePopup = usePopup(s => s.hidePopup);
     const {setGridHelper, gridHelper, enableLights, setEnableLights} =
         useGameSettings();
+    const audioInterface = AudioManager.getInstance();
+
     function onLogoutCallback() {
         window.open(route('logout'), '_self');
+    }
+
+    // This doesn't represent the final volume. It's a helper to display the visual of the volume
+    const [volume, setVolume] = useState<number>(0.5);
+
+    function toggleVolumeCallback() {
+        const newVolume = (volume + 0.5) % 1.5;
+        setVolume(newVolume);
+
+        audioInterface.setVolume(newVolume);
     }
 
     return (
@@ -507,6 +519,8 @@ function PopupSettings() {
                         setGridHelper(!gridHelper);
                     }}
                 />
+
+                <Button text="Volume" icon={ volume === 0 ? Icon.volumeMuted : volume <= 0.5 ? Icon.volumeLow : Icon.volumeHigh } onClick={toggleVolumeCallback} />
             </div>
             <div className="flex justify-between">
                 <Button text="Logout" color="red" onClick={onLogoutCallback} />
