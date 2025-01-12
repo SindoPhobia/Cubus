@@ -2,6 +2,8 @@ import {shaderMaterial, useTexture} from '@react-three/drei';
 import * as THREE from 'three';
 import vertexShader from '../../../../shaders/space/planets/vertex.glsl';
 import fragmentShader from '../../../../shaders/space/planets/fragment.glsl';
+import sunVertexShader from '../../../../shaders/space/planets/sunVertex.glsl';
+import sunFragmentShader from '../../../../shaders/space/planets/sunFragment.glsl';
 import {extend, useFrame} from '@react-three/fiber';
 import {useEffect, useRef} from 'react';
 const PlanetMaterial = shaderMaterial(
@@ -16,7 +18,21 @@ const PlanetMaterial = shaderMaterial(
     vertexShader,
     fragmentShader,
 );
+const SunPlanetMaterial = shaderMaterial(
+    {
+        uLightIntensity: 0.75,
+        uLightColor: new THREE.Color(0xffffff),
+        uColorHigh: new THREE.Color(0x38bdf8),
+        uColorLow: new THREE.Color(0x4ade80),
+        uNoiseTexture: new THREE.Texture(),
+        uLightPosition: new THREE.Vector3(0, 0, 0),
+        uTime: 0,
+    },
+    sunVertexShader,
+    sunFragmentShader,
+);
 extend({PlanetMaterial});
+extend({SunPlanetMaterial});
 export const Planets = () => {
     return (
         <>
@@ -49,6 +65,7 @@ export const Planets = () => {
                 lightIntensity={0}
                 texture="stripesTexture"
                 size={1}
+                isSun={true}
             />
         </>
     );
@@ -65,6 +82,7 @@ type PlanetProps = {
     texture: 'noiseTexture1' | 'noiseTexture2' | 'stripesTexture';
     detail?: number;
     lightIntensity?: number;
+    isSun?: boolean;
 };
 
 const Planet = ({
@@ -75,9 +93,10 @@ const Planet = ({
     texture,
     lightPosition,
     size = 1.5,
-    rotate = false,
+    rotate = true,
     detail = 8,
     lightIntensity = 0.75,
+    isSun = false,
 }: PlanetProps) => {
     const planetRef = useRef<THREE.Mesh>(null);
     const ref = useRef<THREE.ShaderMaterial>(null);
@@ -95,6 +114,9 @@ const Planet = ({
     }, [uTexture, colorHigh, colorLow, lightPosition, lightIntensity, ref]);
 
     useFrame((_, delta) => {
+        if (ref.current && isSun) {
+            ref.current.uniforms.uTime.value += delta;
+        }
         if (rotate && planetRef.current) {
             const speed = 0.02;
             planetRef.current.rotation.y -= delta * speed;
@@ -106,7 +128,11 @@ const Planet = ({
         <>
             <mesh ref={planetRef} position={position} rotation={rotation}>
                 <icosahedronGeometry args={[size, detail]} />
-                <planetMaterial ref={ref} />
+                {isSun ? (
+                    <sunPlanetMaterial ref={ref} />
+                ) : (
+                    <planetMaterial ref={ref} />
+                )}
             </mesh>
         </>
     );
