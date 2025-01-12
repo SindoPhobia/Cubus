@@ -6,7 +6,7 @@ const SOUNDS = {
     'win': '/audio/win.wav',
     'hover': '/audio/button-hover.wav',
     'chimes-starry': '/audio/chimes-starry.flac',
-    'chimes-success': '/audio/chimes-success.mp3',
+    'chimes-success': '/audio/chimes-success.wav',
     'click': '/audio/click.wav',
 } as const;
 
