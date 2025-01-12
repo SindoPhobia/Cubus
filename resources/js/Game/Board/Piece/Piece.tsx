@@ -10,7 +10,7 @@ import {BoardState, useBoardState} from '@/Store/board_state';
 import {PieceModel} from './PieceModel';
 import {PieceShadow} from './PieceShadow';
 import {useInterfaceState} from '@/Store/interface_state';
-import {MovePayload} from '@/types/game';
+import {MovePayload, MoveResponse} from '@/types/game';
 import {validateMove} from '@/network/session_network';
 import {formatMoveOrigin} from '@/libs/move';
 
@@ -170,6 +170,7 @@ export const Piece = ({
     useEffect(() => {
         onDragAnimationEnd.current = async () => {
             let isValid = false;
+            let validMoveResponse: MoveResponse | null = null;
             if (
                 boardState &&
                 boardState.move &&
@@ -182,6 +183,7 @@ export const Piece = ({
                 console.log('move response:', moveResponse);
                 isValid = moveResponse?.valid ?? false;
                 // isValid = true;
+                if(isValid) validMoveResponse = moveResponse;
             }
             if (
                 (!isPiecePositionValid() ||

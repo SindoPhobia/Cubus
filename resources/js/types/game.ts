@@ -45,6 +45,9 @@ export type MoveResponse = {
     origin_x: number;
     origin_y: number;
     block_positions: Array<Vector2>;
+
+    player: PlayerState;
+    session: GameSession;
 };
 
 export type OpponentMove = BoardUpdateEvent;

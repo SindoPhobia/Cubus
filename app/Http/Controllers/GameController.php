@@ -186,8 +186,20 @@ class GameController extends Controller {
                'y' => $part['y'] + $origin_offset['y'],
         ], $piece_parts_rotated);
 
+        $public_player_data = $player->getPublic();
+        $public_player_data['session_color'] = $player->getCurrentSessionColor()->value;
+        $public_player_data['session_valid_pieces'] = $current_session['player_'.$player->getCurrentSessionColor()->value.'_inventory'];
+
         if($is_valid) broadcast(new BoardUpdateEvent($current_session, $player['id'], $player_color, $data['origin_x'], $data['origin_y'], $piece_code, $piece_parts_offset))->toOthers();
-        return response(['valid' => $is_valid, 'origin_x' => $data['origin_x'], 'origin_y' => $data['origin_y'], 'block_positions' => $piece_parts_offset]);
+        return response([
+            'valid' => $is_valid,
+            'origin_x' => $data['origin_x'],
+            'origin_y' => $data['origin_y'],
+            'block_positions' => $piece_parts_offset,
+
+            'player' => $public_player_data,
+            'session' => $current_session,
+        ]);
     }
 
     function validate(Request $request): \Inertia\Response | \Inertia\ResponseFactory | \Illuminate\Http\Response {
