@@ -13,6 +13,7 @@ import {useInterfaceState} from '@/Store/interface_state';
 import {MovePayload, MoveResponse} from '@/types/game';
 import {validateMove} from '@/network/session_network';
 import {formatMoveOrigin} from '@/libs/move';
+import { AudioManager } from '@/AudioManager';
 
 type Props = MovePayload & {
     positionY: number;
@@ -35,6 +36,7 @@ export const Piece = ({
     rotation,
     flip,
 }: Props) => {
+    const audioInterface = AudioManager.getInstance();
     const blockSize = useGameDimensions(state => state.blockSize);
     const ref = useRef<THREE.Group>(null);
     const shadowRef = useRef<THREE.Group>(null);
@@ -530,6 +532,7 @@ export const Piece = ({
     };
 
     const onDragStart = () => {
+        audioInterface.play('block-pickup', false);
         setIsDragging(true);
         setHasMoved(true);
         setPrePosition(getPiecePosition());
