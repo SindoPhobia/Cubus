@@ -16,6 +16,7 @@ import {User} from '@/types/models/tables/User';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import Base from './Base';
 import {useUserEventsStore} from '@/Store/user_events_store';
+import { AudioManager } from '@/AudioManager';
 
 type GameProps = PageProps<{
     user: User;
@@ -50,7 +51,8 @@ function GameContent({
     connectionState,
     flash,
 }: GameContentProps) {
-    const {currentSession, setUser, setCurrentSession} = useAppState();
+    const {currentSession, setUser, setCurrentSession, hasInterracted} = useAppState();
+    const {showPopup} = usePopup();
     const session = currentSession ?? userSession?.session;
     const setState = useBoardState(s => s.setState);
     const updatePlayerState = useBoardState(s => s.updatePlayerState);
@@ -81,6 +83,13 @@ function GameContent({
         }
     }, []);
 
+    useEffect(() => {
+        if(!hasInterracted && !flash || !hasInterracted && flash !== 'user_new') showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
+        if (hasInterracted && session !== null && session?.session_state === 'playing') {
+            AudioManager.getInstance().play('soundtrack-gameplay', true);
+        }
+    }, [session, hasInterracted]);
+
     if (session == null || session.session_state === 'waiting') {
         return (
             <Lobby
@@ -91,6 +100,7 @@ function GameContent({
             />
         );
     }
+
     return (
         <>
             <Experience />
@@ -112,11 +122,8 @@ function Lobby({
     serverMessage,
 }: LobbyProps) {
     const {showPopup} = usePopup();
-    const {user: appStateUser} = useAppState();
+    const {user: appStateUser, setHasInterracted} = useAppState();
     const currentUser = appStateUser ?? user;
-
-
-    console.warn('[DATAAA] ServerMessage:', serverMessage);
 
     useEffect(() => {
         if (
@@ -126,14 +133,14 @@ function Lobby({
             showPopup('user-settings', {
                 title: 'Create Your Profile',
                 denyExit: true,
-            });
+            }, () => setHasInterracted(true) );
         }
     }, []);
 
     return (
         <Base
             className="flex flex-col"
-            initializeMusic={true}>
+            promptIntializeMusic={serverMessage !== 'user_new'}>
             <PopupContainer />
             <section className="pt-8 px-8 flex gap-8 grow items-start">
                 <LobbiesControls games={availableSessions} />

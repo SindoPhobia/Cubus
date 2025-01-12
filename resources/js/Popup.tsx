@@ -196,7 +196,7 @@ function PopupUserSettings() {
         '/portraits/yellow-mlady.jpg',
     ];
 
-    const {hidePopup} = usePopup();
+    const {hidePopup, popupCallback } = usePopup();
     const {user, setUser} = useAppState();
     console.info(
         'Opening user settings with data:',
@@ -279,6 +279,7 @@ function PopupUserSettings() {
         }
 
         if (result) setUser(newUser);
+        if(popupCallback) popupCallback();
         hidePopup();
     }
 
@@ -535,11 +536,12 @@ function PopupSettings() {
 }
 
 function PopupAudioPrompt() {
-    const {hidePopup, popupCallback} = usePopup();
+    const hidePopup = usePopup(s => s.hidePopup);
+    const setHasInterracted = useAppState(s => s.setHasInterracted);
     const AudioInterface = AudioManager.getInstance();
 
     function onExitPopup() {
-        if (popupCallback) popupCallback();
+        setHasInterracted(true);
         hidePopup();
     }
 

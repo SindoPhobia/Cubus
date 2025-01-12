@@ -40,7 +40,7 @@ export default function Index({ user, flash }: PageProps<{ user: User }>) {
     }
 
     return (
-        <Base className="flex flex-col" initializeMusic={false}>
+        <Base className="flex flex-col" promptIntializeMusic={false}>
             <PopupContainer />
             <section className="pt-[10%] flex flex-col gap-12 items-center grow">
 

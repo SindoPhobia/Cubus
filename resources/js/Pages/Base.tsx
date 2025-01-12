@@ -1,29 +1,18 @@
-import { AudioManager, Sounds } from "@/AudioManager";
 import { PopupContainer, usePopup } from "@/Popup";
-import { useAppState } from "@/Store/app_state";
 import { Head } from "@inertiajs/react";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect } from "react";
 
-AudioManager.getInstance();
+type BaseProps = PropsWithChildren<{
+    className?: string;
+    promptIntializeMusic?: boolean
+}>;
 
-export default function Base({ className, children, initializeMusic }: PropsWithChildren<{ className?: string; initializeMusic?: boolean }>) {
-    const [hasInterracted, setHasInterracted] = useState<boolean>(false);
-    const { currentSession } = useAppState();
-    const AudioInterface = AudioManager.getInstance();
+export default function Base({ className, children, promptIntializeMusic }: BaseProps) {
     const { showPopup } = usePopup();
 
-    console.warn('Iniitalizing music necessary? ', {initializeMusic, hasInterracted});
-
     useEffect(() => {
-        if(!initializeMusic) return;
-        if(!hasInterracted) showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true }, () => { setHasInterracted(true) });
-
-        if(hasInterracted) {
-            let soundtrack: Sounds = 'soundtrack-lobby';
-            if(currentSession != null && currentSession.session_state === 'playing') soundtrack = 'soundtrack-gameplay';
-            AudioInterface.play(soundtrack, true);
-        }
-    }, [hasInterracted]);
+        if(promptIntializeMusic) showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
+    }, []);
 
     return (
         <div className="w-screen h-screen bg-backdrop relative overflow-hidden animate-show">
