@@ -14,12 +14,13 @@ type State = {
 };
 
 type Actions = {
-    setState: (game: GameSession, player: PlayerState) => void;
+    setGameState: (game: GameSession) => void;
     updateGameState: (game: GameSession) => void;
     updateOwnBoardState: (
         board_state: GameSession['board_state'],
         nextPlayer?: PlayerColor,
     ) => void;
+    updateState: (game: GameSession, player: PlayerState) => void;
     updatePlayerState: (player: PlayerState) => void;
     setBoardRef: (boardRef: THREE.Mesh | null) => void;
     addBoardPiece: (piece: THREE.Group) => void;
@@ -56,14 +57,34 @@ export const useBoardState = create<BoardState>()((set, get, _) => ({
         current_playing: 'blue',
     },
     playerState: null,
+    updateState: (game, player) => {
+        set(prev => ({
+            gameState: {
+                ...prev.gameState,
+                ...game,
+                ui_state: getUiState(game, player),
+            },
+            playerState: {...prev.playerState, ...player},
+        }));
+    },
+    setGameState: game => {
+        set(prev => ({
+            gameState: {
+                ...prev.gameState,
+                ...game,
+                ui_state: getUiState(game, prev.playerState),
+            },
+            playerState: null,
+        }));
+    },
     updateGameState: game => {
         set(prev => {
             return {
                 gameState: {
                     ...prev.gameState,
                     ...game,
-                    board_state: prev.gameState.board_state,
                     ui_state: getUiState(game, prev.playerState),
+                    board_state: prev.gameState.board_state,
                 },
             };
         });
@@ -80,20 +101,12 @@ export const useBoardState = create<BoardState>()((set, get, _) => ({
     },
     updatePlayerState: player => {
         set(prev => ({
+            gameState: {
+                ...prev.gameState,
+                ui_state: getUiState(prev.gameState, player),
+            },
             playerState: {...prev.playerState, ...player},
         }));
-    },
-    setState: (game, player) => {
-        set(prev => {
-            return {
-                gameState: {
-                    ...prev.gameState,
-                    ...game,
-                    ui_state: getUiState(game, player),
-                },
-                playerState: {...prev.playerState, ...player},
-            };
-        });
     },
     canPlay: () => {
         return get().gameState.ui_state === 'OwnTurnPlaying';

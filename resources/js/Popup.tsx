@@ -12,8 +12,8 @@ import {GameSession} from './types/models/tables/Session';
 import {AudioManager} from './AudioManager';
 import {useGameSettings} from './Store/game_settings';
 import {Checkbox} from './Inputs/Checkbox';
-import { useBoardState } from './Store/board_state';
-import { GameResponse } from './types/game';
+import {useBoardState} from './Store/board_state';
+import {GameResponse} from './types/game';
 
 type PopupDetails = PropsWithChildren<{
     title?: string;
@@ -350,9 +350,9 @@ function PopupLobbySettings() {
     const [lobbyName, setLobbyName] = useState<string>('');
     const [playerCount, setPlayerCount] = useState<number>(2);
     const {setCurrentSession} = useAppState();
-    const setState = useBoardState(s => s.setState);
     const [errors, setErrors] = useState<{general?: string; name?: string}>({});
     const {hidePopup} = usePopup();
+    const updateState = useBoardState(s => s.updateState);
 
     function verifyName(name: string) {
         const pattern = new RegExp(/^[ a-zA-Z-0-9_\-.!#$%^&*]*$/);
@@ -420,9 +420,8 @@ function PopupLobbySettings() {
         } else {
             setErrors(old => ({...old, general: undefined}));
         }
-
         setCurrentSession(result.session);
-        setState(result.session, result.player);
+        updateState(result.session, result.player);
         hidePopup();
     }
 

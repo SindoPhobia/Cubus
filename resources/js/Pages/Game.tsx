@@ -51,10 +51,11 @@ function GameContent({
     connectionState,
     flash,
 }: GameContentProps) {
-    const {currentSession, setUser, setCurrentSession, hasInterracted} = useAppState();
+    const {currentSession, setUser, setCurrentSession, hasInterracted} =
+        useAppState();
     const {showPopup} = usePopup();
     const session = currentSession ?? userSession?.session;
-    const setState = useBoardState(s => s.setState);
+    const setGameState = useBoardState(s => s.setGameState);
     const updatePlayerState = useBoardState(s => s.updatePlayerState);
     console.info('Initial server data:', {
         user,
@@ -66,7 +67,10 @@ function GameContent({
     useEffect(() => {
         setUser(user);
 
-        if (session) setCurrentSession(session);
+        if (session) {
+            setCurrentSession(session);
+            setGameState(session);
+        }
     }, [session]);
 
     useEffect(() => {
@@ -196,8 +200,9 @@ type LobbiesControlsProps = {
 function LobbiesControls({games: _games}: LobbiesControlsProps) {
     const {showPopup} = usePopup();
     const {currentSession, setCurrentSession} = useAppState();
+    const updatePlayerState = useBoardState(s => s.updatePlayerState);
+    const updateState = useBoardState(s => s.updateState);
     const [games, setGames] = useState<GameSession[]>(_games ?? []);
-    const setState = useBoardState(s => s.setState);
     const [loading, setLoading] = useState(false);
 
     async function joinRandomGameCallback() {
@@ -207,8 +212,8 @@ function LobbiesControls({games: _games}: LobbiesControlsProps) {
             url: route('lobby.match'),
         });
         if (!response) return;
-        setState(response.session, response.player);
-    setCurrentSession(response.session);
+        setCurrentSession(response.session);
+        updateState(response.session, response.player);
     }
 
     async function joinGameCallback(gameId: string) {
@@ -218,8 +223,8 @@ function LobbiesControls({games: _games}: LobbiesControlsProps) {
             url: route('lobby.join', gameId),
         });
         if (!response) return;
-        setState(response.session, response.player);
         setCurrentSession(response.session);
+        updateState(response.session, response.player);
     }
 
     const fetchLobbiesCallback = async () => {
