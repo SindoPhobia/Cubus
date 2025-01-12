@@ -236,7 +236,14 @@ function ControlsHUD() {
                     text="End Turn"
                     className="w-full justify-center"
                     blocked={areActionsBlocked}
-                    onClick={() => lockTurn()}
+                    onClick={() => {
+                        console.log('IS LOCKED? ', areActionsBlocked);
+                        if(areActionsBlocked) {
+
+                        }
+
+                        lockTurn()
+                    }}
                 />
             </div>
 

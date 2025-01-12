@@ -12,6 +12,8 @@ import {GameSession} from './types/models/tables/Session';
 import {AudioManager} from './AudioManager';
 import {useGameSettings} from './Store/game_settings';
 import {Checkbox} from './Inputs/Checkbox';
+import { useBoardState } from './Store/board_state';
+import { GameResponse } from './types/game';
 
 type PopupDetails = PropsWithChildren<{
     title?: string;
@@ -348,6 +350,7 @@ function PopupLobbySettings() {
     const [lobbyName, setLobbyName] = useState<string>('');
     const [playerCount, setPlayerCount] = useState<number>(2);
     const {setCurrentSession} = useAppState();
+    const setState = useBoardState(s => s.setState);
     const [errors, setErrors] = useState<{general?: string; name?: string}>({});
     const {hidePopup} = usePopup();
 
@@ -401,7 +404,7 @@ function PopupLobbySettings() {
             playerCount,
         });
         if (!verifyName(lobbyName)) return;
-        const result = await Network.post<GameSession & {message?: string}>({
+        const result = await Network.post<GameResponse & {message?: string}>({
             url: route('lobby.store'),
             body: {name: lobbyName, player_count: playerCount},
         });
@@ -418,7 +421,8 @@ function PopupLobbySettings() {
             setErrors(old => ({...old, general: undefined}));
         }
 
-        setCurrentSession(result);
+        setCurrentSession(result.session);
+        setState(result.session, result.player);
         hidePopup();
     }
 

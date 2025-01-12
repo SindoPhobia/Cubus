@@ -198,15 +198,18 @@ export const Piece = ({
                     boardState?.move?.code !== pieceCode) &&
                 hasMoved
             ) {
+                audioInterface.play('block-place-error', false);
                 onMoveReject();
             } else if (
                 isValid &&
                 boardState?.move?.code === pieceCode &&
                 ref.current
             ) {
+                audioInterface.play('block-place-success', false);
                 boardState?.addBoardPiece(ref.current);
                 boardState?.endTurn();
             } else if (hasMoved) {
+                audioInterface.play('block-place-error', false);
                 onMoveReject();
             }
             setIsDragging(false);

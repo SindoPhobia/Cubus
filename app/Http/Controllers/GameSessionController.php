@@ -94,7 +94,10 @@ class GameSessionController extends Controller {
         $game_session->save();
 
         if($request->expectsJson()) {
-            return response($game_session->getPublic())->withHeaders(['Content-Type' => 'application/json']);
+            return response([
+                'session' => $game_session->getPublic(),
+                'player' => $user->getPublic(),
+            ])->withHeaders(['Content-Type' => 'application/json']);
         }
 
         return redirect()->route('lobby.index');
@@ -156,7 +159,10 @@ class GameSessionController extends Controller {
 
         broadcast(new ConnectEvent($game_session));
         if($request->expectsJson()) {
-            return response($game_session->getPublic())->withHeaders(['Content-Type' => 'application/json']);
+            return response([
+                'session' => $game_session->getPublic(),
+                'player' => $user->getPublic(),
+            ])->withHeaders(['Content-Type' => 'application/json']);
         }
 
         return redirect()->route('game');
@@ -197,7 +203,10 @@ class GameSessionController extends Controller {
         $game_session->save();
 
         broadcast(new ConnectEvent($game_session));
-        return response($game_session->getPublic())->withHeaders(['Content-Type' => 'application/json']);
+            return response([
+                'session' => $game_session->getPublic(),
+                'player' => $user->getPublic(),
+            ])->withHeaders(['Content-Type' => 'application/json']);
     }
 
     public function disconnect(): \Illuminate\Http\RedirectResponse | \Illuminate\Http\Response {

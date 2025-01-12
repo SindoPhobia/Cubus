@@ -58,6 +58,7 @@ function GameContent({
     const updatePlayerState = useBoardState(s => s.updatePlayerState);
     console.info('Initial server data:', {
         user,
+        session,
         userSession,
         availableSessions,
     });
@@ -65,10 +66,8 @@ function GameContent({
     useEffect(() => {
         setUser(user);
 
-        if (userSession == null) return;
-
-        setCurrentSession(userSession.session);
-    }, []);
+        if (session) setCurrentSession(session);
+    }, [session]);
 
     useEffect(() => {
         if (userSession) {
@@ -81,7 +80,7 @@ function GameContent({
         if (session && userSession) {
             setState(session, userSession.player);
         }
-    }, []);
+    }, [session]);
 
     useEffect(() => {
         if(!hasInterracted && !flash || !hasInterracted && flash !== 'user_new') showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
@@ -198,26 +197,29 @@ function LobbiesControls({games: _games}: LobbiesControlsProps) {
     const {showPopup} = usePopup();
     const {currentSession, setCurrentSession} = useAppState();
     const [games, setGames] = useState<GameSession[]>(_games ?? []);
+    const setState = useBoardState(s => s.setState);
     const [loading, setLoading] = useState(false);
 
     async function joinRandomGameCallback() {
         if (currentSession != null) return;
 
-        let response = await Network.get<GameSession>({
+        let response = await Network.get<GameResponse>({
             url: route('lobby.match'),
         });
         if (!response) return;
-        setCurrentSession(response);
+        setState(response.session, response.player);
+    setCurrentSession(response.session);
     }
 
     async function joinGameCallback(gameId: string) {
         if (currentSession != null) return;
 
-        let response = await Network.get<GameSession>({
+        let response = await Network.get<GameResponse>({
             url: route('lobby.join', gameId),
         });
         if (!response) return;
-        setCurrentSession(response);
+        setState(response.session, response.player);
+        setCurrentSession(response.session);
     }
 
     const fetchLobbiesCallback = async () => {

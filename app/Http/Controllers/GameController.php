@@ -199,6 +199,8 @@ class GameController extends Controller {
 
             'player' => $public_player_data,
             'session' => $current_session->getPublic(),
+            'player_available_pieces' => $player_available_pieces,
+            'next_playing' => $current_session['current_playing'],
         ]);
     }
 

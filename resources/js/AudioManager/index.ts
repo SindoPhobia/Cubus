@@ -1,6 +1,9 @@
 const SOUNDS = {
     'play': '/audio/play.wav',
     'block-pickup': '/audio/block-pickup.wav',
+    'block-place-success': '/audio/place-success.wav',
+    'block-place-error': '/audio/place-error.wav',
+
     'airship-engines': '/audio/airship-engines.wav',
     'airship-ping': '/audio/airship-ping.flac',
     'win': '/audio/win.wav',
