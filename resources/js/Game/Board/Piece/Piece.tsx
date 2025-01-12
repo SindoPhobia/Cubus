@@ -170,7 +170,6 @@ export const Piece = ({
     useEffect(() => {
         onDragAnimationEnd.current = async () => {
             let isValid = false;
-            let validMoveResponse: MoveResponse | null = null;
             if (
                 boardState &&
                 boardState.move &&
@@ -183,7 +182,14 @@ export const Piece = ({
                 console.log('move response:', moveResponse);
                 isValid = moveResponse?.valid ?? false;
                 // isValid = true;
-                if(isValid) validMoveResponse = moveResponse;
+                if (isValid) {
+                    if (moveResponse) {
+                        boardState.updatePlayerState(moveResponse.player);
+                        boardState.updateOwnBoardState(
+                            moveResponse.session.board_state,
+                        );
+                    }
+                }
             }
             if (
                 (!isPiecePositionValid() ||

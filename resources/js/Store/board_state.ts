@@ -16,6 +16,10 @@ type State = {
 type Actions = {
     setState: (game: GameSession, player: PlayerState) => void;
     updateGameState: (game: GameSession) => void;
+    updateOwnBoardState: (
+        board_state: GameSession['board_state'],
+        nextPlayer?: PlayerColor,
+    ) => void;
     updatePlayerState: (player: PlayerState) => void;
     setBoardRef: (boardRef: THREE.Mesh | null) => void;
     addBoardPiece: (piece: THREE.Group) => void;
@@ -58,7 +62,18 @@ export const useBoardState = create<BoardState>()((set, get, _) => ({
                 gameState: {
                     ...prev.gameState,
                     ...game,
+                    board_state: prev.gameState.board_state,
                     ui_state: getUiState(game, prev.playerState),
+                },
+            };
+        });
+    },
+    updateOwnBoardState: board_state => {
+        set(prev => {
+            return {
+                gameState: {
+                    ...prev.gameState,
+                    board_state: board_state,
                 },
             };
         });

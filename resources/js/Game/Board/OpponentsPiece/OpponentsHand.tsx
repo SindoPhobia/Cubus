@@ -1,6 +1,5 @@
 import {useBoardState} from '@/Store/board_state';
 import {useEffect, useState} from 'react';
-import * as THREE from 'three';
 import {OpponentPiece} from './OpponentPiece';
 import {OpponentMove} from '@/types/game';
 import {useUserEventsStore} from '@/Store/user_events_store';
