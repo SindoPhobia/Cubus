@@ -1,3 +1,5 @@
+import { CubeRefractionMapping } from "three";
+
 const SOUNDS = {
     'play': '/audio/play.wav',
     'block-pickup': '/audio/block-pickup.flac',
@@ -25,7 +27,7 @@ export class AudioManager {
     private constructor() {
         console.info(`[AudioManager] Preparing to load a total of (${Object.keys(SOUNDS).length}) sounds: `, SOUNDS);
         this.audioInterfaces = {};
-        this.volume = 0.4;
+        this.volume = 0.5;
 
         for(const [name, file] of Object.entries(SOUNDS)) {
             let audioElement = new Audio(file);
@@ -44,12 +46,23 @@ export class AudioManager {
     }
 
     public setVolume(newVolume: number) {
+        console.info('[AudioManager] Setting volume for all sounds to: ', newVolume);
         this.volume = newVolume;
+
+        for(const curInterface of Object.values(this.audioInterfaces)) {
+            curInterface.volume = newVolume;
+        }
+    }
+
+    public stop(name: Sounds) {
+        if(!this.audioInterfaces[name]) return;
+        console.info('[AudioManager] Stopping ', name);
+
+        this.audioInterfaces[name].pause();
+        this.audioInterfaces[name].fastSeek(0);
     }
 
     public play(name: Sounds, loop: boolean, endCallback?: () => void) {
-        console.log('[AudioManager] this:', this);
-
         if(!this.audioInterfaces[name]) return;
         console.info('[AudioManager] Playing sound:', name, { loop, endCallback: endCallback != null}, 'from interface:', this.audioInterfaces[name]);
 
