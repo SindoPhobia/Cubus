@@ -29,7 +29,7 @@ export const Stars = memo(() => {
 
     useEffect(() => {
         if (materialRef.current) {
-            materialRef.current.uniforms.uSize.value = 14;
+            materialRef.current.uniforms.uSize.value = 20;
         }
     }, [materialRef]);
 
@@ -43,7 +43,7 @@ export const Stars = memo(() => {
 
     const geometry = useMemo(() => {
         const parameters = {
-            count: 4000,
+            count: 8000,
             insideColor: 0x0d0221,
             outsideColor: 0xd8bfd8,
             radius: 160,
@@ -58,7 +58,7 @@ export const Stars = memo(() => {
         const insideColor = new THREE.Color(parameters.insideColor);
         const outsideColor = new THREE.Color(parameters.outsideColor);
 
-        const excludedRadius = 20;
+        const excludedRadius = 30;
         for (let i = 0; i < parameters.count; i++) {
             const i3 = i * 3;
 
@@ -99,7 +99,7 @@ export const Stars = memo(() => {
             colors[i3 + 1] = mixedColor.g;
             colors[i3 + 2] = mixedColor.b;
 
-            randoms[i] = Math.random() * 6 + 2;
+            randoms[i] = Math.random() * 10 + 4;
             glow[i] = Math.random() < 0.95 ? 0 : 1;
         }
 
