@@ -198,7 +198,7 @@ class GameController extends Controller {
             'block_positions' => $piece_parts_offset,
 
             'player' => $public_player_data,
-            'session' => $current_session,
+            'session' => $current_session->getPublic(),
         ]);
     }
 
