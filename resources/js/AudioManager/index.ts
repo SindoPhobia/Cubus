@@ -1,5 +1,3 @@
-import { CubeRefractionMapping } from "three";
-
 const SOUNDS = {
     'play': '/audio/play.wav',
     'block-pickup': '/audio/block-pickup.flac',
@@ -10,12 +8,14 @@ const SOUNDS = {
     'chimes-starry': '/audio/chimes-starry.flac',
     'chimes-success': '/audio/chimes-success.mp3',
     'click': '/audio/click.wav',
+} as const;
 
+const SOUNDTRACKS = {
     'soundtrack-lobby': '/audio/AvapXia-Skybound.mp3',
     'soundtrack-gameplay': '/audio/Xennial-The_Next_Level.mp3',
 } as const;
 
-export type Sounds = keyof typeof SOUNDS;
+export type Sounds = keyof typeof SOUNDS | keyof typeof SOUNDTRACKS;
 
 type SoundInterfaces = { [Property in Sounds]?: HTMLAudioElement };
 
@@ -29,7 +29,7 @@ export class AudioManager {
         this.audioInterfaces = {};
         this.volume = 0.5;
 
-        for(const [name, file] of Object.entries(SOUNDS)) {
+        for(const [name, file] of [...Object.entries(SOUNDS), ...Object.entries(SOUNDTRACKS)]) {
             let audioElement = new Audio(file);
             audioElement.load();
             this.audioInterfaces[name as Sounds] = audioElement;
@@ -65,6 +65,12 @@ export class AudioManager {
     public play(name: Sounds, loop: boolean, endCallback?: () => void) {
         if(!this.audioInterfaces[name]) return;
         console.info('[AudioManager] Playing sound:', name, { loop, endCallback: endCallback != null}, 'from interface:', this.audioInterfaces[name]);
+
+        if(name.startsWith('soundtrack')) {
+            for(const soundtrack of Object.keys(SOUNDTRACKS)) {
+                this.audioInterfaces[soundtrack as Sounds]?.pause();
+            }
+        }
 
         this.audioInterfaces[name].volume = this.volume;
         this.audioInterfaces[name].loop = loop;
