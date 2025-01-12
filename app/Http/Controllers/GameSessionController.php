@@ -165,8 +165,8 @@ class GameSessionController extends Controller {
 
         $public_player_session = $user->getCurrentSession();
         $public_player_data = $user->getPublic();
-        $public_player_data['session_color'] = $public_player_session->getCurrentSessionColor()->value;
-        $public_player_data['session_valid_pieces'] = json_decode($public_player_session['player_'.$public_player_session->getCurrentSessionColor()->value.'_inventory']);
+        $public_player_data['session_color'] = $user->getCurrentSessionColor()->value;
+        $public_player_data['session_valid_pieces'] = json_decode($public_player_session['player_'.$user->getCurrentSessionColor()->value.'_inventory']);
 
         if($request->expectsJson()) {
             return response([
@@ -215,8 +215,8 @@ class GameSessionController extends Controller {
         broadcast(new ConnectEvent($game_session));
         $public_player_session = $user->getCurrentSession();
         $public_player_data = $user->getPublic();
-        $public_player_data['session_color'] = $public_player_session->getCurrentSessionColor()->value;
-        $public_player_data['session_valid_pieces'] = json_decode($public_player_session['player_'.$public_player_session->getCurrentSessionColor()->value.'_inventory']);
+        $public_player_data['session_color'] = $user->getCurrentSessionColor()->value;
+        $public_player_data['session_valid_pieces'] = json_decode($public_player_session['player_'.$user->getCurrentSessionColor()->value.'_inventory']);
 
         if($request->expectsJson()) {
             return response([
