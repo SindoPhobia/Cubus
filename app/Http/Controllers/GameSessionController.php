@@ -93,10 +93,14 @@ class GameSessionController extends Controller {
         }
         $game_session->save();
 
+        $public_player_data = $user->getPublic();
+        if(!is_null($current_session)) $public_player_data['session_color'] = $user->getCurrentSessionColor()->value;
+        if(!is_null($current_session)) $public_player_data['session_valid_pieces'] = json_decode($current_session['player_'.$user->getCurrentSessionColor()->value.'_inventory']);
+
         if($request->expectsJson()) {
             return response([
                 'session' => $game_session->getPublic(),
-                'player' => $user->getPublic(),
+                'player' => $public_player_data,
             ])->withHeaders(['Content-Type' => 'application/json']);
         }
 
@@ -158,10 +162,16 @@ class GameSessionController extends Controller {
         $game_session->save();
 
         broadcast(new ConnectEvent($game_session));
+
+        $public_player_session = $user->getCurrentSession();
+        $public_player_data = $user->getPublic();
+        $public_player_data['session_color'] = $public_player_session->getCurrentSessionColor()->value;
+        $public_player_data['session_valid_pieces'] = json_decode($public_player_session['player_'.$public_player_session->getCurrentSessionColor()->value.'_inventory']);
+
         if($request->expectsJson()) {
             return response([
                 'session' => $game_session->getPublic(),
-                'player' => $user->getPublic(),
+                'player' => $public_player_data,
             ])->withHeaders(['Content-Type' => 'application/json']);
         }
 
@@ -203,10 +213,17 @@ class GameSessionController extends Controller {
         $game_session->save();
 
         broadcast(new ConnectEvent($game_session));
+        $public_player_session = $user->getCurrentSession();
+        $public_player_data = $user->getPublic();
+        $public_player_data['session_color'] = $public_player_session->getCurrentSessionColor()->value;
+        $public_player_data['session_valid_pieces'] = json_decode($public_player_session['player_'.$public_player_session->getCurrentSessionColor()->value.'_inventory']);
+
+        if($request->expectsJson()) {
             return response([
                 'session' => $game_session->getPublic(),
-                'player' => $user->getPublic(),
+                'player' => $public_player_data,
             ])->withHeaders(['Content-Type' => 'application/json']);
+        }
     }
 
     public function disconnect(): \Illuminate\Http\RedirectResponse | \Illuminate\Http\Response {
