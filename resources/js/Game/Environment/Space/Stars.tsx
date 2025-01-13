@@ -8,7 +8,7 @@ import {shaderMaterial} from '@react-three/drei';
 const SpaceStarsMaterial = shaderMaterial(
     {
         uTime: 0,
-        uResolution: new THREE.Vector2(),
+        uPixelRatio: 1,
         uSize: 20,
         uGlowIntensity: 0,
     },
@@ -27,18 +27,24 @@ export const Stars = memo(() => {
         }
     });
 
-    useEffect(() => {
-        if (materialRef.current) {
-            materialRef.current.uniforms.uSize.value = 26;
-        }
-    }, [materialRef]);
 
     useEffect(() => {
+        const onResize = () => {
+            if (materialRef.current) {
+                materialRef.current.uniforms.uPixelRatio.value = Math.min(2, window.devicePixelRatio);
+            }
+        };
+        window.addEventListener('resize', onResize);
+        onResize();
         if (materialRef.current) {
+            materialRef.current.uniforms.uSize.value = 20;
             materialRef.current.blending = THREE.AdditiveBlending;
             materialRef.current.transparent = true;
             materialRef.current.depthWrite = false;
         }
+        return () => {
+            window.removeEventListener('resize', onResize);
+        };
     }, [materialRef]);
 
     const geometry = useMemo(() => {
@@ -100,7 +106,7 @@ export const Stars = memo(() => {
             colors[i3 + 2] = mixedColor.b;
 
             randoms[i] = Math.random() * 10 + 4;
-            glow[i] = Math.random() < 0.95 ? 0 : 1;
+            glow[i] = Math.random() < 0.90 ? 0 : 1;
         }
 
         geometry.setAttribute(

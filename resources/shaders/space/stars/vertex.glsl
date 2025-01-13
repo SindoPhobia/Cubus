@@ -1,5 +1,6 @@
 uniform float uSize;
 uniform float uTime;
+uniform float uPixelRatio;
 
 attribute float aRandom;
 attribute vec3 aColor;
@@ -17,7 +18,7 @@ void main(){
 
     gl_Position = projectionPosition;
 
-    gl_PointSize = uSize * aRandom;
+    gl_PointSize = uSize * aRandom * uPixelRatio;
     gl_PointSize *= ( 1.0 / - viewPosition.z ); // Size Attenuation
 
     vColor = aColor;
