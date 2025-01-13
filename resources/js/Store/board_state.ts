@@ -74,7 +74,6 @@ export const useBoardState = create<BoardState>()((set, get, _) => ({
                 ...game,
                 ui_state: getUiState(game, prev.playerState),
             },
-            playerState: null,
         }));
     },
     updateGameState: game => {

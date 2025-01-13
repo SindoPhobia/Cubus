@@ -70,7 +70,7 @@ function GameContent({
 
         if (session) {
             setCurrentSession(session);
-            setGameState(session);
+            updateGameState(session);
         }
     }, [session]);
 
@@ -81,11 +81,11 @@ function GameContent({
         }
     }, [userSession]);
 
-    // useEffect(() => {
-    //     if (session) {
-    //         updateGameState(session);
-    //     }
-    // }, [session]);
+    useEffect(() => {
+        if (session) {
+            setGameState(session);
+        }
+    }, []);
 
     useEffect(() => {
         if(!hasInterracted && !flash || !hasInterracted && flash !== 'user_new') showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
