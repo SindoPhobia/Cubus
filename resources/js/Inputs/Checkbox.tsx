@@ -3,7 +3,7 @@ type CheckBoxProps = {
     name: string;
     label?: string;
     checked?: boolean;
-    onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
+    onClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function Checkbox({
@@ -21,9 +21,9 @@ export function Checkbox({
                     id={name + '-' + value}
                     value={value}
                     name={name}
-                    defaultChecked={checked}
+                    checked={checked}
                     className="peer w-[40px] h-[40px] absolute top-0 left-0 z-10 opacity-0 cursor-pointer"
-                    onClick={onClick}
+                    onChange={onClick}
                 />
                 <button
                     className="

@@ -393,9 +393,9 @@ function PopupLobbySettings() {
         setLobbyName(data);
     }
 
-    function onPlayerCountChange(event: React.MouseEvent<HTMLInputElement>) {
-        const data = event?.currentTarget?.value ?? '';
-        setPlayerCount(parseInt(data));
+    function onPlayerCountChange(players: number) {
+        console.info('Attempting to change player count to: ', players);
+        setPlayerCount(players);
     }
 
     async function onConfirmCallback() {
@@ -454,18 +454,19 @@ function PopupLobbySettings() {
                         Player Count
                     </label>
                     <div className="flex gap-4">
-                        <RadioButton
+                        <Checkbox
                             name="player-count"
                             value="2"
-                            checked={true}
+                            checked={playerCount === 2}
                             label="2 Players"
-                            onClick={onPlayerCountChange}
+                            onClick={() => onPlayerCountChange(2)}
                         />
-                        <RadioButton
+                        <Checkbox
                             name="player-count"
                             value="4"
                             label="4 Players"
-                            onClick={onPlayerCountChange}
+                            checked={playerCount === 4}
+                            onClick={() => onPlayerCountChange(4)}
                         />
                     </div>
                 </div>
