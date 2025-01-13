@@ -29,7 +29,7 @@ export const Stars = memo(() => {
 
     useEffect(() => {
         if (materialRef.current) {
-            materialRef.current.uniforms.uSize.value = 20;
+            materialRef.current.uniforms.uSize.value = 26;
         }
     }, [materialRef]);
 
