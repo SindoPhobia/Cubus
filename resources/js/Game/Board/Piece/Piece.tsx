@@ -171,46 +171,30 @@ export const Piece = ({
 
     useEffect(() => {
         onDragAnimationEnd.current = async () => {
-            let isValid = false;
-            if (
-                boardState &&
-                boardState.move &&
-                boardState?.move?.code === pieceCode
-            ) {
-                console.log(boardState.move);
-                const moveResponse = await validateMove(
-                    formatMoveOrigin(boardState.move, playerCount),
-                );
-                console.log('move response:', moveResponse);
-                isValid = moveResponse?.valid ?? false;
-                // isValid = true;
-                if (isValid) {
-                    if (moveResponse) {
-                        boardState.updatePlayerState(moveResponse.player);
+            if (boardState?.move?.code !== pieceCode) {
+                if (hasMoved) {
+                    onMoveReject();
+                }
+            } else {
+                if (!isPiecePositionValid()) {
+                    onMoveReject();
+                } else {
+                    const moveResponse = await validateMove(
+                        formatMoveOrigin(boardState.move, playerCount),
+                    );
+                    if (moveResponse?.valid) {
                         boardState.updateOwnBoardState(
                             moveResponse.session.board_state,
                         );
+                        boardState.updatePlayerState(moveResponse.player, moveResponse.session.board_state);
+                        if (ref.current) {
+                            boardState?.addBoardPiece(ref.current);
+                        }
+                        boardState?.endTurn();
+                    } else {
+                        onMoveReject();
                     }
                 }
-            }
-            if (
-                (!isPiecePositionValid() ||
-                    boardState?.move?.code !== pieceCode) &&
-                hasMoved
-            ) {
-                audioInterface.play('block-place-error', false);
-                onMoveReject();
-            } else if (
-                isValid &&
-                boardState?.move?.code === pieceCode &&
-                ref.current
-            ) {
-                audioInterface.play('block-place-success', false);
-                boardState?.addBoardPiece(ref.current);
-                boardState?.endTurn();
-            } else if (hasMoved) {
-                audioInterface.play('block-place-error', false);
-                onMoveReject();
             }
             setIsDragging(false);
         };
@@ -504,6 +488,7 @@ export const Piece = ({
     };
 
     const onMoveReject = () => {
+        audioInterface.play('block-place-error', false);
         boardState?.setMove(null);
         if (preMoveQuaternion) {
             rejectRotation('lock');

@@ -21,7 +21,7 @@ type Actions = {
         nextPlayer?: PlayerColor,
     ) => void;
     updateState: (game: GameSession, player: PlayerState) => void;
-    updatePlayerState: (player: PlayerState) => void;
+    updatePlayerState: (player: PlayerState, board_state?: GameSession['board_state']) => void;
     setBoardRef: (boardRef: THREE.Mesh | null) => void;
     addBoardPiece: (piece: THREE.Group) => void;
     setMove: (move: MovePayload | null) => void;
@@ -98,11 +98,11 @@ export const useBoardState = create<BoardState>()((set, get, _) => ({
             };
         });
     },
-    updatePlayerState: player => {
+    updatePlayerState: (player, board_state) => {
         set(prev => ({
             gameState: {
                 ...prev.gameState,
-                ui_state: getUiState(prev.gameState, player),
+                ui_state: getUiState({...prev.gameState, board_state: board_state ?? prev.gameState.board_state}, player),
             },
             playerState: {...prev.playerState, ...player},
         }));
