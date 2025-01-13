@@ -214,7 +214,9 @@ function LobbiesControls({games: _games}: LobbiesControlsProps) {
         });
         if (!response) return;
         setCurrentSession(response.session);
+        console.log(response);
         updateState(response.session, response.player);
+        fetchLobbiesCallback();
     }
 
     async function joinGameCallback(gameId: string) {
@@ -225,7 +227,9 @@ function LobbiesControls({games: _games}: LobbiesControlsProps) {
         });
         if (!response) return;
         setCurrentSession(response.session);
+        console.log(response);
         updateState(response.session, response.player);
+        fetchLobbiesCallback();
     }
 
     const fetchLobbiesCallback = async () => {
