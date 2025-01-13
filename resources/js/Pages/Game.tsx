@@ -57,6 +57,7 @@ function GameContent({
     const session = currentSession ?? userSession?.session;
     const setGameState = useBoardState(s => s.setGameState);
     const updatePlayerState = useBoardState(s => s.updatePlayerState);
+    const updateGameState = useBoardState(s => s.updateGameState);
     console.info('Initial server data:', {
         user,
         session,
@@ -80,11 +81,11 @@ function GameContent({
         }
     }, [userSession]);
 
-    useEffect(() => {
-        if (session && userSession) {
-            setState(session, userSession.player);
-        }
-    }, [session]);
+    // useEffect(() => {
+    //     if (session) {
+    //         updateGameState(session);
+    //     }
+    // }, [session]);
 
     useEffect(() => {
         if(!hasInterracted && !flash || !hasInterracted && flash !== 'user_new') showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
