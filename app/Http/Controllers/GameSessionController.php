@@ -16,15 +16,11 @@ class GameSessionController extends Controller {
     public function index(Request $request): \Inertia\ResponseFactory | \Inertia\Response | \Illuminate\Http\Response {
         $user = AuthService::getUser();
 
-        $sessions = GameSession::where('session_state', GameSessionState::Waiting);
-        foreach(PlayerColor::values() as $color) {
-            $sessions = $sessions->where(function (Builder $query) use ($user, $color) {
-                $query
-                    ->whereNull('player_'.$color.'_id')
-                    ->orWhere('player_'.$color.'_id', '!=', $user['id']);
-            });
+        $sessions = GameSession::where('session_state', GameSessionState::Waiting)->get();
+        for($i = 0; $i < count($sessions); $i++) {
+            $sessions[$i] = $sessions[$i]->getPublic();
         }
-        $sessions = $sessions->get();
+
         $current_session = $user->getCurrentSession();
         if(!is_null($current_session)) {
             $current_session = $current_session->getPublic();

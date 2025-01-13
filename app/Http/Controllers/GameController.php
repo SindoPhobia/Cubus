@@ -34,15 +34,7 @@ class GameController extends Controller {
             );
         }
 
-        $sessions = GameSession::where('session_state', GameSessionState::Waiting);
-        foreach(PlayerColor::values() as $color) {
-            $sessions = $sessions->where(function (Builder $query) use ($player, $color) {
-                $query
-                    ->whereNull('player_'.$color.'_id')
-                    ->orWhere('player_'.$color.'_id', '!=', $player['id']);
-            });
-        }
-        $sessions = $sessions->get();
+        $sessions = GameSession::where('session_state', GameSessionState::Waiting)->get();
         for($i = 0; $i < count($sessions); $i++) {
             $sessions[$i] = $sessions[$i]->getPublic();
         }
