@@ -26,7 +26,7 @@ void main(){
     vec3 light = pointLight(vec3(0.078, 2.222, 0.651), 1.0, vNormal, vec3(-10.0, 1.0, -6.0), normalize(vPosition - cameraPosition), 20.0, vPosition, 0.1);
     color += light;
 
-    gl_FragColor = vec4(color*2.0, smoke);
+    gl_FragColor = vec4(color*4.0, smoke);
 
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
