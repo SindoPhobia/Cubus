@@ -198,7 +198,7 @@ export const Piece = ({
             }
             setIsDragging(false);
         };
-    }, [boardState?.move, pieceCode, hasMoved, ref.current]);
+    }, [boardState?.move, pieceCode, hasMoved, ref.current, position, preMovePosition, preMoveQuaternion]);
 
     const getOriginalQuaternion = () => {
         const flipAxis = getFlipAxis();
@@ -355,11 +355,11 @@ export const Piece = ({
                 !pieceTouchingBoard
             ) {
                 // //* Reject the move if the piece is not on the board
+                ref.current?.rotation.set(0,0,0)
                 rejectPosition('lock');
                 if (pieceCode === boardState?.move?.code) {
                     //! Deprecated feature
-                    // boardState?.rejectMove();
-                    // boardState?.lockTurn();
+                    boardState?.rejectMove();
                 }
             } else {
                 saveMove();
