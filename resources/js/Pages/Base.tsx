@@ -11,6 +11,7 @@ export default function Base({ className, children, promptIntializeMusic }: Base
     const { showPopup } = usePopup();
 
     useEffect(() => {
+        console.log('Shoud I prompt?', promptIntializeMusic);
         if(promptIntializeMusic) showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
     }, []);
 

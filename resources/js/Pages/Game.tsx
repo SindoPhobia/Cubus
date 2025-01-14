@@ -88,7 +88,6 @@ function GameContent({
     }, []);
 
     useEffect(() => {
-        if(!hasInterracted && !flash || !hasInterracted && flash !== 'user_new') showPopup('prompt-audio', { title: 'Do you want audio?', showExit: false, denyExit: true });
         if (hasInterracted && session !== null && session?.session_state === 'playing') {
             AudioManager.getInstance().play('soundtrack-gameplay', true);
         }
@@ -144,7 +143,7 @@ function Lobby({
     return (
         <Base
             className="flex flex-col"
-            promptIntializeMusic={serverMessage !== 'user_new'}>
+            promptIntializeMusic={(serverMessage !== 'user_new') && !!(currentUser?.icon && currentUser.icon.length > 0)}>
             <PopupContainer />
             <section className="pt-8 px-8 flex gap-8 grow items-start">
                 <LobbiesControls games={availableSessions} />
