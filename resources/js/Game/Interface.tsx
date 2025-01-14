@@ -16,6 +16,7 @@ import {PropsWithChildren, useEffect, useMemo, useState} from 'react';
 import {Loading} from './Loading';
 import {COLORS} from '@/Constants/colors';
 import {usePlayerRank} from '@/Hooks/usePlayerRank';
+import { useUserEventsStore } from '@/Store/user_events_store';
 
 export const Interface = () => {
     const ui_state = useBoardState(state => state.gameState.ui_state);
@@ -91,13 +92,17 @@ const GameStateFeedback = () => {
 
 function PlayersHUD() {
     const {currentSession} = useAppState();
+    const latestMove = useUserEventsStore(s => s.latestMove);
+    const session = useMemo(() => {
+        return latestMove?.session ?? currentSession
+    }, [currentSession, latestMove?.session]);
 
-    if (!currentSession) return;
+    if (!session) return;
 
     return (
         <div className="p-4 flex flex-col gap-2">
             {['blue', 'red', 'green', 'yellow'].map((color, i) => {
-                const currentPlayer = currentSession[
+                const currentPlayer = session[
                     ('player_' + color) as keyof GameSession
                 ] as User | null;
                 if (currentPlayer == null) return;
@@ -106,7 +111,7 @@ function PlayersHUD() {
                         key={i}
                         user={currentPlayer}
                         playerPoints={
-                            currentSession[
+                            session[
                                 `player_${color}_points` as keyof GameSession
                             ] as number
                         }
@@ -254,11 +259,7 @@ function ControlsHUD() {
 
 function GameFinishedMessage() {
     const [showMessage, setShowMessage] = useState(true);
-    const {currentSession} = useAppState();
-    const points =
-        (currentSession?.[
-            `player_${currentSession.current_playing}_points` as keyof GameSession
-        ] as number) ?? 0;
+    const { playerPoints, label} = usePlayerRank();
     if (showMessage) {
         return (
             <div className="fixed z-50 inset-0 left-1/2 top-1/2">
@@ -307,7 +308,8 @@ function GameFinishedMessage() {
 }
 
 function GameEndScreen() {
-    const {label, isWin, rank} = usePlayerRank();
+    const {label, isWin, rank, playerPoints} = usePlayerRank();
+
     return (
         <div className="fixed z-50 inset-0 left-1/2 top-1/2">
             <div
