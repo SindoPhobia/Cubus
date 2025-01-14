@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\GameSessionState;
 use App\Enums\PlayerColor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 
@@ -38,12 +40,14 @@ class User extends Authenticatable {
 
     function getCurrentSession(): ?GameSession {
         $currentUserSessions = GameSession::query();
-        $nextQuery = 'where';
-        foreach(PlayerColor::values() as $color) {
-            $currentUserSessions = $currentUserSessions->$nextQuery('player_'.$color.'_id', '=', $this['id']);
-            $nextQuery = 'orWhere';
-        }
-        $currentUserSessions = $currentUserSessions->get();
+        $currentUserSessions->where(function (Builder $query) {
+            $nextQuery = 'where';
+            foreach(PlayerColor::values() as $color) {
+                $query = $query->$nextQuery('player_'.$color.'_id', '=', $this['id']);
+                $nextQuery = 'orWhere';
+            }
+        });
+        $currentUserSessions = $currentUserSessions->whereNot('session_state', GameSessionState::Complete)->get();
 
         if(count($currentUserSessions) == 0) return null;
 
