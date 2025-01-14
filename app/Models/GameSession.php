@@ -40,7 +40,7 @@ class GameSession extends Model {
     }
 
     function getAll() {
-        return $this->with('player_host')->with('player_green')->with('player_blue')->with('player_red')->with('player_yellow')->get();
+        return $this->with('player_host')->with('player_green')->with('player_blue')->with('player_red')->with('player_yellow')->where('id', $this->id)->get();
     }
 
     public function player_host() {

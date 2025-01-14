@@ -43,6 +43,7 @@ class GameController extends Controller {
         if(!is_null($current_session)) $public_player_data['session_color'] = $player->getCurrentSessionColor()->value;
         if(!is_null($current_session)) $public_player_data['session_valid_pieces'] = json_decode($current_session['player_'.$player->getCurrentSessionColor()->value.'_inventory']);
 
+
         if($request->expectsJson()) {
             return response([
                 'session' => $current_session ? $current_session->getPublic() : null,
