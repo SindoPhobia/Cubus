@@ -180,8 +180,8 @@ class GameController extends Controller {
         ], $piece_parts_rotated);
 
         $public_player_data = $player->getPublic();
-        $public_player_data['session_color'] = $player->getCurrentSessionColor()->value;
-        $public_player_data['session_valid_pieces'] = $current_session['player_'.$player->getCurrentSessionColor()->value.'_inventory'];
+        if($player->getCurrentSessionColor()) $public_player_data['session_color'] = $player->getCurrentSessionColor()->value;
+        if($player->getCurrentSessionColor()) $public_player_data['session_valid_pieces'] = $current_session['player_'.$player->getCurrentSessionColor()->value.'_inventory'];
 
         if($is_valid) broadcast(new BoardUpdateEvent($current_session, $player['id'], $player_color, $data['origin_x'], $data['origin_y'], $piece_code, $piece_parts_offset))->toOthers();
         return response([
