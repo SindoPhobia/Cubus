@@ -280,11 +280,17 @@ function GameFinishedMessage() {
                         border-b-2
                         bg-light-default-bottom border-t-custom-gray-700 border-b-custom-gray-800
                         ">
-                    <p className="text-bold text-pink-50 text-3xl">
+                    <div className='flex flex-col gap-y-2'>
+                    <p className="text-bold text-pink-50 text-3xl text-center">
                         You have scored{' '}
-                        <span className="text-custom-purple-400">{points}</span>{' '}
-                        points!
+                        <span className="text-custom-purple-400">{playerPoints}</span>{' '}
+                        points
                     </p>
+                    <p className='text-bold text-pink-50 text-lg text-center'> You are in <span className='text-custom-purple-400'>{label}</span> place</p>
+                    <p className="text-bold text-gray-300 text-lg text-center">
+                        Waiting for other players to finish...
+                    </p>
+                    </div>
                     <div className="flex gap-x-4">
                         <Button
                             onClick={() => setShowMessage(false)}
@@ -329,6 +335,7 @@ function GameEndScreen() {
                 border-b-2
                 bg-light-default-bottom border-t-custom-gray-700 border-b-custom-gray-800
                 ">
+                <div className='flex flex-col gap-y-2'>
                 <p className="text-bold text-pink-50 text-6xl">
                     {isWin ? (
                         <>
@@ -344,6 +351,8 @@ function GameEndScreen() {
                         </>
                     )}
                 </p>
+                <p className='text-center'>You earned <span className='font-semibold'>{playerPoints}</span> points!</p>
+                </div>
                 <Button
                     onClick={() => window.open(route('index'), '_self')}
                     text="Continue"
