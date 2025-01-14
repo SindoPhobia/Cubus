@@ -24,7 +24,7 @@ export default function Base({ className, children, promptIntializeMusic }: Base
             <PopupContainer />
 
             <div className="absolute z-50 w-screen h-screen pointer-events-none bg-[url('/ui-backdrop/noise.jpg')] opacity-[4%] scale-105 animate-noise"></div>
-            <div className="absolute z-50 w-screen h-screen pointer-events-none bg-[url('/ui-backdrop/noise.jpg')] opacity-[5%] scale-105 animate-noise-alt"></div>
+            <div className="absolute z-50 w-screen h-screen pointer-events-none bg-[url('/ui-backdrop/noise.jpg')] opacity-[9%] scale-105 animate-noise-alt"></div>
             <div className={`relative z-10 w-screen h-screen text-custom-gray-400 font-bold ${className}`}>
                 { children }
             </div>
