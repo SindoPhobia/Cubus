@@ -76,7 +76,7 @@ export default {
                 'asteroid-hover': 'AsteroidHover2 20s ease 1s infinite',
                 'noise': 'Noise 3s infinite',
                 'noise-alt': 'NoiseAlt 6s infinite',
-                'show': 'Show 3s ease 1s both',
+                'show': 'Show 1s ease both',
 
                 'star': 'Star 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                 'star-slow': 'Star 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
