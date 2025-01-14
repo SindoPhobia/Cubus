@@ -94,7 +94,7 @@ const Planet = ({
     lightPosition,
     size = 1.5,
     rotate = true,
-    detail = 8,
+    detail = 12,
     lightIntensity = 0.75,
     isSun = false,
 }: PlanetProps) => {
