@@ -1,5 +1,5 @@
 import {Canvas} from '@react-three/fiber';
-import {memo} from 'react';
+import {memo, useState} from 'react';
 import GameMap from './Board/GameMap';
 import {Interface} from './Interface';
 import {BoardControls} from './Board/BoardControls';
@@ -19,7 +19,7 @@ import {Loading} from './Loading';
 import {Perf} from 'r3f-perf';
 import {Space} from './Environment/Space/Space';
 import {loadModels} from '@/Hooks/loadModels';
-import { Bvh } from '@react-three/drei';
+import { Bvh, PerformanceMonitor } from '@react-three/drei';
 import { useGameSettings } from '@/Store/game_settings';
 
 const INITIAL_CAMERA_PROPS = {
@@ -32,9 +32,11 @@ export const Experience = memo(() => {
     const ui_state = useBoardState(state => state.gameState.ui_state);
     const isGameOnGoing = useBoardState(state => state.isGameOnGoing);
     const haveModelsLoaded = useLoadedModels(s => s.hasLoaded);
+    const [dpr, setDpr] = useState(1.5);
+
     return (
         <>
-            <Canvas
+            <Canvas dpr={dpr}
                 gl={{
                     antialias: true,
                     toneMapping: THREE.ACESFilmicToneMapping,
@@ -45,6 +47,7 @@ export const Experience = memo(() => {
                     updateCamera(camera, ui_state, isGameOnGoing);
                 }}
                 camera={INITIAL_CAMERA_PROPS}>
+                <PerformanceMonitor onIncline={() => setDpr(2)} onDecline={() => setDpr(1)} />
                 <color attach={'background'} args={['#000000']} />
                 <PerformanceMetrics/>
                 <BoardControls />
