@@ -19,6 +19,7 @@ import {Loading} from './Loading';
 import {Perf} from 'r3f-perf';
 import {Space} from './Environment/Space/Space';
 import {loadModels} from '@/Hooks/loadModels';
+import { Bvh } from '@react-three/drei';
 
 const INITIAL_CAMERA_PROPS = {
     fov: 85,
@@ -46,8 +47,10 @@ export const Experience = memo(() => {
                 <color attach={'background'} args={['#000000']} />
                 {/* <Perf position="top-left" /> */}
                 <BoardControls />
-                {haveModelsLoaded && <GameMap />}
-                <Space />
+                <Bvh>
+                    {haveModelsLoaded && <GameMap />}
+                    <Space />
+                </Bvh>
                 <InitExperience />
             </Canvas>
             <Interface />
