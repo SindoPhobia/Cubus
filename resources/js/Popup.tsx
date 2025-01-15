@@ -485,7 +485,7 @@ function PopupLobbySettings() {
 
 function PopupSettings() {
     const hidePopup = usePopup(s => s.hidePopup);
-    const {setGridHelper, gridHelper, enableLights, setEnableLights} =
+    const {setGridHelper, gridHelper, enableLights, setEnableLights,enablePerf,setEnablePerf} =
         useGameSettings();
     const audioInterface = AudioManager.getInstance();
 
@@ -522,6 +522,15 @@ function PopupSettings() {
                     checked={gridHelper}
                     onClick={() => {
                         setGridHelper(!gridHelper);
+                    }}
+                />
+                <Checkbox
+                    name="Performance Metrics"
+                    value="metrics"
+                    label="Enable Performance Metrics"
+                    checked={enablePerf}
+                    onClick={() => {
+                        setEnablePerf(!enablePerf);
                     }}
                 />
 
