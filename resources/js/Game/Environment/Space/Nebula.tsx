@@ -1,6 +1,6 @@
 import vertexShader from '../../../../shaders/space/nebula/vertex.glsl'
 import fragmentShader from '../../../../shaders/space/nebula/fragment.glsl'
-import { shaderMaterial, useTexture } from '@react-three/drei';
+import { Cloud, Clouds, shaderMaterial, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { extend, useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
@@ -42,7 +42,10 @@ export const Nebula = () => {
             <nebulaMaterial ref={ref}
                 />
         </mesh>
-
+        <Clouds position={[-60, -90, 0]} material={THREE.MeshBasicMaterial}>
+            <Cloud segments={10} volume={15} speed={0.2} color={new THREE.Color(4.956862, 0.447059, 0.713725)} fade={10} opacity={0.3} />
+            <Cloud seed={1} scale={1} volume={30} speed={0.1} position={[2,5,0]} color="#8b5cf6" fade={100} opacity={0.1}/>
+        </Clouds>
         </>
     );
 };
