@@ -7,13 +7,13 @@ import * as THREE from 'three';
 import vertexShader from '../../../../shaders/model/hologramVertex.glsl';
 import fragmentShader from '../../../../shaders/model/hologramFragment.glsl';
 import {extend, useFrame} from '@react-three/fiber';
-import {shaderMaterial} from '@react-three/drei';
+import { ContactShadows} from '@react-three/drei';
 import {useLoadedModels} from '@/Store/models_state';
 
 export const PlayerModels = () => {
     const models = useLoadedModels(s => s.models);
     const positions = usePlayerPositions();
-    const modelHeight = 1.6;
+    const modelHeight = 1.65;
     const isPlayerAlive = useBoardState(state => state.isPlayerAlive);
     const isGameOnGoing = useBoardState(state => state.isGameOnGoing);
 
@@ -83,11 +83,48 @@ const PlayerModel = ({model, position, isPlayerAlive}: Props) => {
     const initialMaterialRef = useRef<{[key: string]: THREE.Material | null}>(
         {},
     );
+    const shadowRef = useRef<THREE.Group | null>(null);
     const isAnimating = useRef(false);
     const handleClick = () => {
         if (ref.current && !isAnimating.current && isPlayerAlive) {
             isAnimating.current = true;
             const offset = 0.5;
+            if(shadowRef.current){
+                gsap.to(shadowRef.current.position, {
+                    y: shadowRef.current.position.y - offset,
+                    duration: DURATION,
+                    onComplete: () => {
+                        if (shadowRef.current) {
+                            gsap.to(shadowRef.current.position, {
+                                y: shadowRef.current.position.y + offset,
+                                duration: DURATION * 0.75,
+                                onComplete: () => {
+                                    isAnimating.current = false;
+                                },
+                            });
+                        }
+                    },
+                });
+                gsap.to(shadowRef.current.scale, {
+                    x: shadowRef.current.scale.x - 0.1,
+                    y: shadowRef.current.scale.y - 0.1,
+                    z: shadowRef.current.scale.z - 0.1,
+                    duration: DURATION,
+                    onComplete: () => {
+                        if (shadowRef.current) {
+                            gsap.to(shadowRef.current.scale, {
+                                x: shadowRef.current.scale.x + 0.1,
+                                y: shadowRef.current.scale.y + 0.1,
+                                z: shadowRef.current.scale.z + 0.1,
+                                duration: DURATION * 0.75,
+                                onComplete: () => {
+                                    isAnimating.current = false;
+                                },
+                            });
+                        }
+                    },
+                });
+            }
             gsap.to(ref.current.position, {
                 y: ref.current.position.y + offset,
                 duration: DURATION,
@@ -173,7 +210,9 @@ const PlayerModel = ({model, position, isPlayerAlive}: Props) => {
                                 : Math.PI * 0.5,
                         0,
                     ]}
-                />
+                >
+                   {isPlayerAlive && <ContactShadows ref={shadowRef} position={[0,0,0]} frames={1} opacity={0.4} scale={1} blur={4} far={5} resolution={64} color="#000000" />}
+                </primitive>
             </>
         );
     } else {
