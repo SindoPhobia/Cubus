@@ -20,6 +20,7 @@ import {Perf} from 'r3f-perf';
 import {Space} from './Environment/Space/Space';
 import {loadModels} from '@/Hooks/loadModels';
 import { Bvh } from '@react-three/drei';
+import { useGameSettings } from '@/Store/game_settings';
 
 const INITIAL_CAMERA_PROPS = {
     fov: 85,
@@ -45,7 +46,7 @@ export const Experience = memo(() => {
                 }}
                 camera={INITIAL_CAMERA_PROPS}>
                 <color attach={'background'} args={['#000000']} />
-                {/* <Perf position="top-left" /> */}
+                <PerformanceMetrics/>
                 <BoardControls />
                 <Bvh>
                     {haveModelsLoaded && <GameMap />}
@@ -57,6 +58,11 @@ export const Experience = memo(() => {
             <Loading />
         </>
     );
+});
+
+const PerformanceMetrics = memo(() => {
+    const enablePerf = useGameSettings(s => s.enablePerf);
+    return enablePerf ? <Perf position="top-right" /> : <></>;
 });
 
 const InitExperience = memo(() => {
