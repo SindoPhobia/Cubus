@@ -19,7 +19,7 @@ void main(){
     gl_Position = projectionPosition;
 
     gl_PointSize = uSize * aRandom * uPixelRatio;
-    gl_PointSize *= ( 1.0 / - viewPosition.z ); // Size Attenuation
+    gl_PointSize = max(gl_PointSize * ( 1.0 / - viewPosition.z ), 2.15); // Size Attenuation
 
     vColor = aColor;
     vRandom = aRandom;
